@@ -1,7 +1,7 @@
 const amqp = require('amqplib');
 const nodemailer = require('nodemailer');
 
-const connectionUrl = 'amqps://pjfowojn:hi7ZiPRdS6bEQDHZo-_CKeLH7vbINRCn@possum.lmq.cloudamqp.com/pjfowojn';
+const connectionUrl = process.env.AMQPURL;
 const queueName = 'notifications';
 
 async function connect() {
@@ -25,8 +25,8 @@ async function connect() {
                     const transporter = nodemailer.createTransport({
                         service: 'gmail',
                         auth: {
-                            user: 'ogobogobob@gmail.com', // replace with your email
-                            pass: 'asjpljcbvljhwghi' // replace with your email password
+                            user: process.env.EMAIL, // replace with your email
+                            pass: process.env.PASSWORD // replace with your email password
                         }
                     });
         
