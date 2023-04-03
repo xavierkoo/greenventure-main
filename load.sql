@@ -8,9 +8,26 @@ CREATE TABLE IF NOT EXISTS `ACCOUNT` (
     `userID` VARCHAR(50) NOT NULL,
     `name` VARCHAR(20),
     `email` VARCHAR(50),
-    `accessToken` TEXT,
     CONSTRAINT account_pk PRIMARY KEY (`userID`)
 );
+
+INSERT INTO
+    `ACCOUNT`
+VALUES
+    (
+        '123456789',
+        'Poster',
+        'aaronkwah@gmail.com'
+    );
+
+INSERT INTO
+    `ACCOUNT`
+VALUES
+    (
+        '9876543321',
+        'Tom',
+        'ray.quek@gmail.com'
+    );
 
 DROP DATABASE IF EXISTS communityDB;
 
@@ -21,6 +38,7 @@ USE communityDB;
 CREATE TABLE IF NOT EXISTS `USERPOST`(
     `postID` INT AUTO_INCREMENT,
     `userID` varchar(50),
+    `username` varchar(50),
     `post_datetime` DATETIME,
     `post` VARCHAR(200),
     CONSTRAINT userpost_pk PRIMARY KEY (`postID`)
@@ -30,51 +48,13 @@ CREATE TABLE IF NOT EXISTS `POSTACTIVITY`(
     `postID` INT,
     `activity_datetime` DATETIME,
     `action_user` varchar(50),
+    `action_username` varchar(50),
     `activity` VARCHAR(20),
     `comment` VARCHAR(50),
     CONSTRAINT postactivity_pk PRIMARY KEY (`postID`, `activity_datetime`, `action_user`),
     CONSTRAINT postactivity_fk1 FOREIGN KEY (`postID`) REFERENCES `USERPOST` (`postID`)
 );
 
--- INSERT INTO `POSTACTIVITY`
--- VALUES
---     (
---         '00001',
---         '2023-01-03 00:23:24',
---         '00002',
---         'like',
---         NULL
---     );
--- INSERT INTO
---     `POSTACTIVITY`
--- VALUES
---     (
---         '00001',
---         '2023-01-02 00:23:30',
---         '00002',
---         'comment',
---         'goodjob terry!'
---     );
--- INSERT INTO
---     `POSTACTIVITY`
--- VALUES
---     (
---         '00002',
---         '2023-02-03 13:20:12',
---         '00003',
---         'like',
---         NULL
---     );
--- INSERT INTO
---     `POSTACTIVITY`
--- VALUES
---     (
---         '00003',
---         '2023-03-01 04:20:24',
---         '00001',
---         'like',
---         NULL
---     );
 DROP DATABASE IF EXISTS voucherDB;
 
 CREATE DATABASE IF NOT EXISTS voucherDB;
@@ -206,17 +186,17 @@ CREATE TABLE IF NOT EXISTS `WALLETVOUCHER`(
 INSERT INTO
     `WALLET` (`userID`, `points_remaining`)
 VALUES
-    ('162804203307686', 100);
+    ('162804203307685', 1000);
 
 INSERT INTO
     `WALLET` (`userID`, `points_remaining`)
 VALUES
-    ('162804203307687', 50);
+    ('162804203307687', 2000);
 
 INSERT INTO
     `WALLET` (`userID`, `points_remaining`)
 VALUES
-    ('162804203307689', 300);
+    ('162804203307689', 2040);
 
 INSERT INTO
     `WALLETVOUCHER`
@@ -269,7 +249,12 @@ INSERT INTO
         `description`
     )
 VALUES
-    (60, 'Plastic', 3, 'This is mission 1...');
+    (
+        60,
+        'Plastic',
+        3,
+        'Earn 60 points when you recycle 3 plastic items at our recycling bin!'
+    );
 
 INSERT INTO
     `MISSION` (
@@ -279,7 +264,12 @@ INSERT INTO
         `description`
     )
 VALUES
-    (100, 'Paper', 5, 'This is mission 2...');
+    (
+        100,
+        'Paper',
+        5,
+        'Earn 100 points when you recycle 5 paper items at our recycling bin!'
+    );
 
 INSERT INTO
     `MISSION` (
@@ -289,7 +279,12 @@ INSERT INTO
         `description`
     )
 VALUES
-    (20, 'Others', 2, 'This is mission 3...');
+    (
+        20,
+        'Plastic',
+        1,
+        'Earn 20 points when you recycle 1 plastic item at our recycling bin!'
+    );
 
 INSERT INTO
     `MISSION` (
@@ -299,7 +294,12 @@ INSERT INTO
         `description`
     )
 VALUES
-    (200, 'Electronics', 2, 'This is mission 4...');
+    (
+        200,
+        'Electronics',
+        2,
+        'Earn 200 points when you recycle 2 electronic waste at our recycling bin!'
+    );
 
 /******************************************************************************/
 -- recyclingbinDB script

@@ -2,6 +2,7 @@ import json
 from flask import Flask, redirect, request, jsonify, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import pika
 from invokes import invoke_http
 import os
 
@@ -23,6 +24,8 @@ def createAccount():
     print("----------- [1] START RETRIEVING REQUEST BODY DATA ------------")
     data = request.get_json()
     aId = data["aId"]
+    name = data["name"]
+    email = data["email"]
     print(f"AID = {aId}")
     print("----------- [2] SUCCESS - RETRIEVED REQUEST BODY DATA ------------")
 
@@ -41,20 +44,46 @@ def createAccount():
     if response[0]["code"] == 404:
         print("----------- [4] ID NOT IN SYSTEM ------------")
 
-        print("----------- [5] POST REQUEST TO ACCOUNT (SIMPLE SERVICE) ------------")
+        print(
+            "----------- [5] POST REQUEST TO ACCOUNT (SIMPLE SERVICE) ------------")
         invoke_http(ACCOUNT_URL + aId, method="POST", json=data)
 
-        print("----------- [6] POST REQUEST TO WALLET (SIMPLE SERVICE) ------------")
+        print(
+            "----------- [6] POST REQUEST TO WALLET (SIMPLE SERVICE) ------------")
 
-        aDict = {"userID": int(aId)}
-        invoke_http(CREATE_WALLET_URL + "wallet/adduser", method="POST", json=aDict)
+        createWalletBody = {"userID": int(aId)}
+        invoke_http(
+            CREATE_WALLET_URL + "wallet/adduser", method="POST", json=createWalletBody
+        )
 
         print(
             "----------- [7] POST REQUEST TO LEADERBOARD (SIMPLE SERVICE) ------------"
         )
-        # invoke_http(LEADERBOARD_URL + "api/leaderboards/" + aId, method="POST")
+        leaderboardBody = {"userId": aId, "name": name}
+        invoke_http(LEADERBOARD_URL, method="POST", json=leaderboardBody)
 
-        print("----------- [8] POST REQUEST TO AMQP (SIMPLE SERVICE) ------------")
+        print(
+            "----------- [8] POST REQUEST TO AMQP (SIMPLE SERVICE) ------------")
+
+        def send_to_lavinmq(message):
+            channel.basic_publish(
+                exchange="", routing_key=queue_name, body=message)
+
+        url = "amqps://pjfowojn:hi7ZiPRdS6bEQDHZo-_CKeLH7vbINRCn@possum.lmq.cloudamqp.com/pjfowojn"
+        params = pika.URLParameters(url)
+        connection = pika.BlockingConnection(params)
+        channel = connection.channel()
+        queue_name = "notifications"
+
+        my_object = {
+            "email": email,
+            "message": "You have successfully created an account with greenVenture!",
+            "subject": "Account Registration!",
+        }
+        message = json.dumps(my_object)
+        send_to_lavinmq(message)
+        # Close the connection
+        connection.close()
 
         print("----------- [9] SUCCESS - ALL SERVICES UPDATED ------------")
 

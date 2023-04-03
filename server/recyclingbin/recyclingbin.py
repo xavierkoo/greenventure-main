@@ -55,7 +55,7 @@ def get_verification_code(verification_code):
 
     if verification:
         return jsonify({"code": 200, "data": verification.json()})
-    return jsonify({"code": 404, "message": "Book not found."}), 404
+    return jsonify({"code": 404, "message": "Verification code not found."}), 404
 
 
 @app.route("/generate_code", methods=["POST"])

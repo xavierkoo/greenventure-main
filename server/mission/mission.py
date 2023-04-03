@@ -26,7 +26,9 @@ recyclingbin_URL = environ.get("recyclingbinURL") or "http://localhost:5105/"
 wallet_URL = environ.get("walletURL") or "http://localhost:5102/"
 addpoints_URL = wallet_URL + "wallet/addpoints"
 
-leaderboard_URL = environ.get("leaderboardURL") or "http://localhost:5103/"
+leaderboard_URL = (
+    environ.get("leaderboardURL") or "http://localhost:5103/api/leaderboards/"
+)
 
 
 class Mission(db.Model):
@@ -104,7 +106,7 @@ def get_all_available_mission(userid):
             {
                 "code": 200,
                 "data": {"missions": [mission.json() for mission in missionlist]},
-                "message": "Successfully gotten available mission(s)",
+                "message": "Successfully obtained all available mission(s)",
             }
         )
     return (
@@ -112,7 +114,7 @@ def get_all_available_mission(userid):
             {
                 "query_userid": userid,
                 "code": 404,
-                "message": "There are no available mission.",
+                "message": "There are no available missions.",
             }
         ),
         404,
@@ -156,8 +158,8 @@ def get_all_in_progress_mission(userid):
             }
             missionlist.append(mission_dict)
 
-        return jsonify({"code": 200, "data": {"missions": missionlist}})
-    return jsonify({"code": 404, "message": "There are no available mission."}), 404
+        return jsonify({"code": 200, "data": {"missions": missionlist}, "message": "Successfully obtained all in-progress mission(s)."})
+    return jsonify({"code": 404, "message": "There are no in-progress missions."}), 404
 
 
 @app.route("/accept_mission", methods=["POST"])
@@ -194,7 +196,7 @@ def accept_mission():
         )
 
     # success case
-    return jsonify({"code": 201, "data": new_usermission.json()}), 201
+    return jsonify({"code": 201, "data": new_usermission.json(), "message": "Successfully accepted mission"}), 201
 
 
 @app.route("/complete_mission", methods=["POST"])
@@ -275,7 +277,7 @@ def complete_mission():
         # update fields
         usermission.completed_count = completedcount + 1
 
-        if completedcount + 1 == missionrequired:
+        if completedcount + 1 >= missionrequired:
 
             usermission.status = "completed"
 
@@ -286,6 +288,8 @@ def complete_mission():
 
                 # trigger all completed mission procedure, includes adding points to wallet,
                 # updating leaderboard, as well as sending email to user
+
+                data["points"] = points_earnt
 
                 update_wallet_status = update_wallet(data)
 
@@ -299,28 +303,7 @@ def complete_mission():
                         "message": update_wallet_status["message"],
                     }
 
-                ############################################################
-                # ADD CODE FOR UPDATING LEADER BOARD HERE
-
-                # variables to use:
-                # points_earnt, means the points that has been added
-                # query_walletid, walletid of user
-                # query_userid, userid of user
-
-                update_leaderboard_status = update_leaderboard(data)
-
-                code = update_leaderboard_status["code"]
-
-                if code not in range(200, 300):
-
-                    return {
-                        "code": code,
-                        # assuming the update wallet function returns error in message key
-                        "message": update_leaderboard_status["message"],
-                    }
-
-                ############################################################
-                # ADD CODE FOR PUSHING MESSAGE TO AMQP HERE
+                update_leaderboard(data)
 
                 def send_to_lavinmq(message):
 
@@ -335,7 +318,9 @@ def complete_mission():
                 queue_name = "notifications"
                 my_object = {
                     "email": "limrenkee123@gmail.com",
-                    "message": "You have earnt {} from the mission!".format(points),
+                    "message": "You have earnt {} from the mission!".format(
+                        points_earnt
+                    ),
                     "subject": "Mission Completed!",
                 }
                 message = json.dumps(my_object)
@@ -345,7 +330,7 @@ def complete_mission():
 
                 return {"code": 200, "message": "Task executed successfully"}
 
-            return jsonify({"code": 200, "data": usermission.json()}), 200
+            return jsonify({"code": 200, "data": usermission.json(),"message": "Successfully completed an additional task."}), 200
 
         except Exception as e:
 
@@ -403,10 +388,9 @@ def update_wallet(data):
 
 
 def update_leaderboard(data):
-
     # check if verifcation code exists in the recycling bin microservice
     leaderboard_info = invoke_http(
-        leaderboard_URL + str(data["userid"]), json=data, method="PATCH"
+        leaderboard_URL + data["userid"], json=data, method="PATCH"
     )
 
     return leaderboard_info

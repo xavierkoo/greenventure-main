@@ -1,59 +1,52 @@
 <h1 align="center"> GreenVenture </h1> <br>
 
-<p align="center">
-  Sample microservice description.
+<p>
+Inspired by the Healthy 365 app launched by the Health Promotion Board (HPB), GreenVenture is an application that rewards users for recyling a non-contaminated recyclable. Like the Healthy 365 app where users are allowed to scan a QRCode to gain points after purchasing a healthier choice product, this approach towards recycling not only incentives users to come ahead to recycle, but also provide instant feedback to users on whether their item is valid recyclable. 
 </p>
-
 
 ## Table of Contents
 
-- [Introduction](#introduction)
+- [Tech Stack](#tech-stack)
 - [Features](#features)
 - [Requirements](#requirements)
-- [Quick Start](#quick-start)
-- [Testing](#testing)
-- [API](#requirements)
-- [Acknowledgements](#acknowledgements)
 
-
-
-
-## Introduction
-
-TODO: Replace with introduction
+## Tech Stack
+* Authentication: OAuth2 with Facebook SSO Login
+* Front-End: Vue.js & React.js (https://github.com/GreenVenture/greenventure-frontend)
+* Back-End: Flask & Node.js + Express.js
+* Databases: MySQL & MongoDB
+* Tools: Docker, LavinMQ & nodemailer
 
 ## Features
-TODO: Description of features
 
-* Include a list of
-* all the many beautiful
-* web server features
+* Participate and complete recycling themed missions and earn points
+* Redeem vouchers with points
+* Participate in the community and view the leaderboards
 
 
 ## Requirements
-The application can be run locally or in a docker container, the requirements for each setup are listed below.
+The frontend of the application can be run locally or by using the deployed Netlify link. The backend can be run in a docker container, the requirements for the setup is listed below.
 
-
-### Local
-
-
-### Docker
-* [Docker](https://www.docker.com/get-docker)
-
-## Quick Start
-Make sure ....
-
-### Run Local
+### Local - Frontend
+Clone greenventure-frontend:
 ```bash
-$ ??
+$ git clone git@github.com:GreenVenture/greenventure-frontend.git
 ```
+Open your terminal in the local project root folder, and execute:
+```bash
+$ npm install
+```
+Run the application
+```bash
+$ npm run dev
+```
+Application will run by default on port `5173` <br>
+Alternative Deployed FrontEnd Netlify Link: https://main--greenventure.netlify.app/ <br>
 
-Application will run by default on port `1234`
+### Backend
+Run load.sql script to initialize the database
 
-Configure the port by changing `server.port` in __application.yml__
-
-
-### Run Docker
+#### Run Docker
 
 First build the image:
 ```bash
@@ -64,15 +57,6 @@ When ready, run it:
 ```bash
 $ docker-compose up
 ```
-
-Application will run by default on port `1234`
-
-## Testing
-TODO: Additional instructions for testing the application.
-
-
-## API
-TODO: API Reference with examples, or a link to a wiki or other documentation source.
-
-## Acknowledgements
-TODO: Show folks some love.
+Secondary UIs: <br>
+* `recycling-bin-frontend` - `8081`
+* `leaderboards` - `3000`

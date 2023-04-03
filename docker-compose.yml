@@ -62,7 +62,8 @@ services:
         restart: always
         environment:
             #insert db
-            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/
+            MONGODB_URI: mongodb+srv://fullstack:skyrim2812@cluster0.zlomb.mongodb.net/leaderboardDB?retryWrites=true&w=majority
+            PORT: 5103
             PYTHONUNBUFFERED: 1
         ports:
             - "5103:5103"
@@ -129,7 +130,8 @@ services:
         environment:
             dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/missionDB
             recyclingbinURL: http://recyclingbin:5105/
-            walletURL: http://wallet:5202/
+            walletURL: http://wallet:5102/
+            leaderboardURL: http://leaderboards:5103/api/leaderboards/
             PYTHONUNBUFFERED: 1
         ports:
             - "5201:5201"
@@ -238,9 +240,32 @@ services:
             CREATE_WALLET_URL: "http://wallet:5102/"
             ACCOUNT_URL: "http://account:5100/"
             AUTH_ACCOUNT_URL: "http://authaccount:5207/"
-            # LEADERBOARD_URL: "http://leaderboard:5103/"
+            LEADERBOARD_URL: http://leaderboards:5103/api/leaderboards/
         ports:
             - "5208:5208"
+        networks:
+            - my-network
+
+    #####################################################################
+    # Create Account: The Create Account complex microservice
+    #####################################################################
+
+    commentpost:
+        build:
+            context: ./server/commentPost
+            dockerfile: commentpost.Dockerfile
+        image: rayquek123/commentpost:1.0
+        restart: always
+        depends_on:
+            - community
+            - account
+        environment:
+            PYTHONUNBUFFERED: 1
+            CREATE_WALLET_URL: "http://wallet:5102/"
+            COMMUNITY_URL: "http://community:5104/"
+            ACCOUNT_URL: "http://account:5100/"
+        ports:
+            - "5206:5206"
         networks:
             - my-network
 
@@ -250,14 +275,29 @@ services:
 
     recyclingbin_frontend:
         build:
-            context: ./client/recycling-bin-vue
+            context: ./client/recycling-bin-frontend
             dockerfile: bin_frontend.Dockerfile
-        image: rayquek123/recyclingbinfrontend:1.0
+        # image: rayquek123/recyclingbinfrontend:1.0
         ports:
-            - "8081:8081"
+            - "8081:8080"
+        depends_on:
+            - recyclingbin
         networks:
             - my-network
-        # command: npm run serve
+
+        #####################################################################
+        # LeaderBoard UI: The frontend for leaderboard
+        #####################################################################
+
+    leaderboard_frontend:
+        build:
+            context: ./client/leaderboards
+        ports:
+            - "3000:3000"
+        environment:
+            REACT_APP_API_URL: http://leaderboards:5103
+        depends_on:
+            - leaderboards
 
 networks:
     my-network:

@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import os
 from datetime import datetime
+from flask_cors import CORS
 
 app = Flask(__name__)
 # Setting up the database connection.
@@ -12,23 +13,27 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("dbURL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+CORS(app)
 
 
 class Userpost(db.Model):
     __tablename__ = "USERPOST"
     postID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     userID = db.Column(db.String(50), nullable=False)
+    username = db.Column(db.String(50), nullable=False)
     post_datetime = db.Column(db.DateTime, nullable=False)
     post = db.Column(db.String(255), nullable=False)
 
-    def __init__(self, userID, post_datetime, post):
+    def __init__(self, userID, username, post_datetime, post):
         self.userID = userID
+        self.username = username
         self.post_datetime = post_datetime
         self.post = post
 
     def json(self):
         return {
             "userID": self.userID,
+            "username": self.username,
             "postID": self.postID,
             "post_datetime": self.post_datetime,
             "post": self.post,
@@ -40,13 +45,17 @@ class Postactivity(db.Model):
     postID = db.Column(db.Integer, primary_key=True)
     activity_datetime = db.Column(db.DateTime, primary_key=True)
     action_user = db.Column(db.String(50), primary_key=True)
+    action_username = db.Column(db.String(50), nullable=True)
     activity = db.Column(db.String(20), nullable=True)
     comment = db.Column(db.String(50), nullable=True)
 
-    def __init__(self, postID, activity_datetime, action_user, activity, comment):
+    def __init__(
+        self, postID, activity_datetime, action_user, action_username, activity, comment
+    ):
         self.postID = postID
         self.activity_datetime = activity_datetime
         self.action_user = action_user
+        self.action_username = action_username
         self.activity = activity
         self.comment = comment
 
@@ -55,6 +64,7 @@ class Postactivity(db.Model):
             "postID": self.postID,
             "activity_datetime": self.activity_datetime,
             "action_user": self.action_user,
+            "action_username": self.action_username,
             "activity": self.activity,
             "comment": self.comment,
         }
@@ -78,8 +88,8 @@ def getAllPost():
         )
     else:
         return (
-            jsonify({"code": 500, "message": "There is no post currently available"}),
-            500,
+            jsonify({"code": 404, "message": "There is no post currently available"}),
+            404,
         )
 
 
@@ -106,8 +116,37 @@ def getAllPostByUser(userID):
         )
     else:
         return (
-            jsonify({"code": 500, "message": "There is no post currently available"}),
-            500,
+            jsonify({"code": 404, "message": "There is no post currently available"}),
+            404,
+        )
+
+
+@app.route("/user/<postID>", methods=["GET"])
+def getUserEmailByPostId(postID):
+    """
+    It takes a postID as an argument and returns the userID of the user who posted it
+
+    :param postID: The ID of the post you want to get the user's email for
+    :return: The userID of the user who posted the postID
+    """
+
+    post = db.session.query(Userpost).filter_by(postID=postID).first()
+    post = post.json()
+
+    if post is not None:
+        return (
+            jsonify(
+                {
+                    "code": 200,
+                    "data": {"posterID": post["userID"]},
+                }
+            ),
+            200,
+        )
+    else:
+        return (
+            jsonify({"code": 404, "message": "There is no post currently available"}),
+            404,
         )
 
 
@@ -123,9 +162,12 @@ def addNewPost(userID):
 
     aRequest = request.get_json()
     post = str(aRequest["post"])
+    username = str(aRequest["name"])
     now = datetime.now()
     formatted_date = now.strftime("%Y-%m-%d %H:%M:%S")
-    newPost = Userpost(userID=userID, post_datetime=formatted_date, post=post)
+    newPost = Userpost(
+        userID=userID, username=username, post_datetime=formatted_date, post=post
+    )
     try:
         db.session.add(newPost)
         db.session.commit()
@@ -133,12 +175,12 @@ def addNewPost(userID):
         return (
             jsonify(
                 {
-                    "code": 500,
+                    "code": 400,
                     "message": "An error occurred while creating the Post record. "
                     + str(e),
                 }
             ),
-            500,
+            400,
         )
     return jsonify({"code": 201, "data": newPost.json()}), 201
 
@@ -153,7 +195,7 @@ def deleteAPost(postID):
     """
     record_to_delete = Userpost.query.filter_by(postID=postID).first()
 
-    if record_to_delete:
+    if record_to_delete is not None:
         try:
             db.session.delete(record_to_delete)
             db.session.commit()
@@ -161,20 +203,30 @@ def deleteAPost(postID):
             return (
                 jsonify(
                     {
-                        "code": 500,
+                        "code": 400,
                         "message": "An error occurred while creating the Post record. "
                         + str(e),
                     }
                 ),
-                500,
+                400,
             )
         return (
             jsonify({"code": 201, "message": "The post has been deleted successfully"}),
             201,
         )
+    else:
+        return (
+            jsonify(
+                {
+                    "code": 404,
+                    "message": "There is no post detail by the id found!",
+                }
+            ),
+            404,
+        )
 
 
-@app.route("/community/post/<postID>", methods=["GET"])
+@app.route("/post/<postID>", methods=["GET"])
 def getPostDetail(postID):
     """
     It returns a jsonified response of all the post details for a given postID
@@ -199,12 +251,12 @@ def getPostDetail(postID):
         )
     else:
         return (
-            jsonify({"code": 500, "message": "There is no post details for this post"}),
-            500,
+            jsonify({"code": 404, "message": "There is no post details for this post"}),
+            404,
         )
 
 
-@app.route("/community/post/<postID>", methods=["POST"])
+@app.route("/post/<postID>", methods=["POST"])
 def addPostDetail(postID):
     """
     It takes a postID, and then creates a new Postactivity record in the database
@@ -214,6 +266,7 @@ def addPostDetail(postID):
     """
     aRequest = request.get_json()
     action_user = str(aRequest["action_user"])
+    action_username = str(aRequest["name"])
     activity = str(aRequest["activity"])
     comment = str(aRequest["comment"])
     now = datetime.now()
@@ -221,6 +274,7 @@ def addPostDetail(postID):
     newPostDetail = Postactivity(
         postID=postID,
         action_user=action_user,
+        action_username=action_username,
         activity=activity,
         comment=comment,
         activity_datetime=formatted_date,
@@ -232,17 +286,17 @@ def addPostDetail(postID):
         return (
             jsonify(
                 {
-                    "code": 500,
+                    "code": 400,
                     "message": "An error occurred while creating the Post Detail record. "
                     + str(e),
                 }
             ),
-            500,
+            400,
         )
     return jsonify({"code": 201, "data": newPostDetail.json()}), 201
 
 
-@app.route("/community/post/<postID>", methods=["DELETE"])
+@app.route("/post/<postID>", methods=["DELETE"])
 def deletePostDetail(postID):
     """
     Delete a post detail record from the database
@@ -256,7 +310,7 @@ def deletePostDetail(postID):
     record_to_delete = Postactivity.query.filter_by(
         postID=postID, activity_datetime=activity_datetime, action_user=action_user
     ).first()
-    if record_to_delete:
+    if record_to_delete is not None:
         try:
             db.session.delete(record_to_delete)
             db.session.commit()
@@ -264,12 +318,12 @@ def deletePostDetail(postID):
             return (
                 jsonify(
                     {
-                        "code": 500,
+                        "code": 400,
                         "message": "An error occurred while creating the PostDetail record. "
                         + str(e),
                     }
                 ),
-                500,
+                400,
             )
 
         return (
@@ -280,6 +334,16 @@ def deletePostDetail(postID):
                 }
             ),
             201,
+        )
+    else:
+        return (
+            jsonify(
+                {
+                    "code": 404,
+                    "message": "There is no post detail by the id found!",
+                }
+            ),
+            404,
         )
 
 
