@@ -1,0 +1,30 @@
+{
+  "name": "greenventure-notifications",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GreenVenture/greenventure-notifications.git"
+  },
+  "author": "Xavier Koo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GreenVenture/greenventure-notifications/issues"
+  },
+  "homepage": "https://github.com/GreenVenture/greenventure-notifications#readme",
+  "dependencies": {
+    "amqp": "^0.2.7",
+    "amqp10": "^3.6.0",
+    "amqplib": "^0.10.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "kafka-node": "^5.0.0",
+    "nodemailer": "^6.9.1",
+    "rhea": "^3.0.2",
+    "rhea-promise": "^3.0.0"
+  }
+}

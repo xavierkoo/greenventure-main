@@ -1,0 +1,102 @@
+/* Fonts */
+body {
+	font-family: Inter, 'Trebuchet MS', Arial, sans-serif;
+	font-size: clamp(0.89rem, 0.23vw + 0.84rem, 1rem);
+	font-weight: 400;
+	line-height: 1.5;
+	background-color: #0a4c39;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 700;
+	line-height: calc(2px + 2ex + 2px);
+	color: #EAF0EE;
+}
+
+h1 {
+	font-size: clamp(3.39rem, 0.87vw + 3.2rem, 3.81rem);
+}
+
+h2 {
+	font-size: clamp(2.71rem, 0.69vw + 2.56rem, 3.05rem);
+}
+
+h3 {
+	font-size: clamp(2.17rem, 0.55vw + 2.05rem, 2.44rem);
+}
+
+h4 {
+	font-size: clamp(1.74rem, 0.44vw + 1.64rem, 1.95rem);
+}
+
+h5 {
+	font-size: clamp(1.39rem, 0.36vw + 1.31rem, 1.56rem);
+}
+
+h6 {
+	font-size: clamp(1.11rem, 0.28vw + 1.05rem, 1.25rem);
+}
+
+label {
+	color:var(--off-white-color);
+}
+
+/* Colors */
+:root {
+	--main-brand-color: #39AF70;
+	--dark-accent-color: #737169;
+	--dark-shade-color: #24272B;
+	--light-accent-color: #85A09C;
+	--light-shade-color: #EAF0EE;
+	--off-white-color: #FEFEFE;
+	--danger-red-color: #ca001e;
+}
+
+/* Border Radius */
+.btn {
+	border-radius: 16px;
+}
+
+.btn-small {
+	border-radius: 8px;
+}
+
+/* Other */
+.badge-pill {
+	border-radius: 10rem;
+	background-color: var(--light-accent-color);
+	width: 16rem;
+}
+
+.blur-effect {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 200px;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+	filter: blur(10px);
+}
+
+.caption {
+	font-size: clamp(0.71rem, 0.18vw + 0.67rem, 0.8rem);
+}
+
+.glow {
+    box-shadow: 0 0 5px #eee, 0 0 10px #eee, 0 0 15px #eee, 0 0 20px #2ecc71, 0 0 35px #2ecc71, 0 0 40px #2ecc71, 0 0 50px #2ecc71;
+}
+
+.points {
+	font-size: clamp(0.89rem, 0.23vw + 0.84rem, 1rem);
+	color: rgb(0, 255, 0, 0.5);
+}
+
+.tiny {
+	font-size: clamp(0.57rem, 0.15vw + 0.54rem, 0.64rem);
+}  
+
+.top-three {
+	color: var(--main-brand-color);
+	font-size: large;
+}

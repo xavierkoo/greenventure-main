@@ -1,0 +1,264 @@
+version: "3.8"
+
+services:
+    ###################################
+    # Voucher: The Voucher microservice
+    ###################################
+    account:
+        build:
+            context: ./server/account
+            dockerfile: account.Dockerfile
+        image: rayquek123/account:1.0
+        restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/accountDB
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5100:5100"
+        networks:
+            - my-network
+    ###################################
+    # Voucher: The Voucher microservice
+    ###################################
+    voucher:
+        build:
+            context: ./server/voucher
+            dockerfile: voucher.Dockerfile
+        image: rayquek123/voucher:1.0
+        restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/voucherDB
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5101:5101"
+        networks:
+            - my-network
+
+    #######################################################
+    # Wallet: The Wallet microservice
+    #######################################################
+    wallet:
+        build:
+            context: ./server/wallet
+            dockerfile: wallet.Dockerfile
+        image: rayquek123/wallet:1.0
+        restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/walletDB
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5102:5102"
+        networks:
+            - my-network
+
+    #######################################################
+    # Leaderboard: The Leaderboard microservice
+    #######################################################
+    leaderboards:
+        build:
+            context: ./server/leaderboards
+            dockerfile: leaderboards.Dockerfile
+        image: rayquek123/leaderboards:1.0
+        restart: always
+        environment:
+            #insert db
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5103:5103"
+        networks:
+            - my-network
+
+    #######################################################
+    # Leaderboard: The Leaderboard microservice
+    #######################################################
+    community:
+        build:
+            context: ./server/community
+            dockerfile: community.Dockerfile
+        image: rayquek123/community:1.0
+        restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/communityDB
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5104:5104"
+        networks:
+            - my-network
+
+    #######################################################
+    # Recycling Bin: The recycling bin microservice
+    #######################################################
+    recyclingbin:
+        build:
+            context: ./server/recyclingbin
+            dockerfile: recyclingbin.Dockerfile
+        image: rayquek123/recyclingbin:1.0
+        restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/recyclingbinDB
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5105:5105"
+        networks:
+            - my-network
+
+    #####################################################################
+    # Notifications: The notification microservice
+    #####################################################################
+    notifications:
+        build:
+            context: ./server/notifications
+            dockerfile: notifications.Dockerfile
+        image: rayquek123/notifications:1.0
+        restart: always
+        ports:
+            - "5672:5672"
+        networks:
+            - my-network
+
+    #######################################################
+    # Mission: The Mission complex microservice
+    #######################################################
+    mission:
+        build:
+            context: ./server/mission
+            dockerfile: mission.Dockerfile
+        image: rayquek123/mission:1.0
+        restart: always
+        environment:
+            dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/missionDB
+            recyclingbinURL: http://recyclingbin:5105/
+            walletURL: http://wallet:5202/
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5201:5201"
+        networks:
+            - my-network
+
+    #####################################################################
+    # Display Points Vouchers: The Display Points Vouchers complex microservice
+    #####################################################################
+    displayPointsVouchers:
+        build:
+            context: ./server/displayPointsVouchers
+            dockerfile: displayPointsVouchers.Dockerfile
+        image: rayquek123/displaypointsvouchers:1.0
+        depends_on:
+            - wallet
+            - voucher
+        environment:
+            voucher_URL: http://voucher:5101/voucher
+            wallet_URL: http://wallet:5102/wallet
+            walletVoucher_URL: http://wallet:5102/walletVoucher
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5203:5203"
+        networks:
+            - my-network
+    ###############################################
+    # Redeem Voucher: The redeem voucher complex microservice
+    ###############################################
+    redeem_voucher:
+        build:
+            context: ./server/redeemVoucher
+            dockerfile: redeemVoucher.Dockerfile
+        image: rayquek123/redeemvoucher:1.0
+        restart: always
+        depends_on:
+            - voucher
+            - wallet
+        environment:
+            voucher_URL: http://voucher:5101/voucher
+            wallet_URL: http://wallet:5102/wallet
+            walletVoucher_URL: http://wallet:5102/walletVoucher
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5204:5204"
+        networks:
+            - my-network
+    #####################################################################
+    # Use Vouchers: The Use Vouchers complex microservice
+    #####################################################################
+    use_voucher:
+        build:
+            context: ./server/useVoucher
+            dockerfile: useVoucher.Dockerfile
+        image: rayquek123/usevoucher:1.0
+        restart: always
+        depends_on:
+            - wallet
+        environment:
+            wallet_URL: http://wallet:5102/wallet
+            walletVoucher_URL: http://wallet:5102/walletVoucher
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5205:5205"
+        networks:
+            - my-network
+
+    #####################################################################
+    # Auth Account: The Auth Account complex microservice
+    #####################################################################
+    authaccount:
+        build:
+            context: ./server/auth
+            dockerfile: auth.Dockerfile
+        image: rayquek123/authaccount:1.0
+        restart: always
+        depends_on:
+            - account
+        environment:
+            APP_SECRET: W10_ESD_Breakdowns
+            FACEBOOK_OAUTH_ID: 207392055310912
+            FACEBOOK_OAUTH_SECRET: 85f92b197a5c9b7cad6cdeb19809e86a
+            CREATE_ACCOUNT_URL: "http://createaccount:5208/"
+            PYTHONUNBUFFERED: 1
+        ports:
+            - "5207:5207"
+        networks:
+            - my-network
+
+    #####################################################################
+    # Create Account: The Create Account complex microservice
+    #####################################################################
+
+    createaccount:
+        build:
+            context: ./server/createAccount
+            dockerfile: createaccount.Dockerfile
+        image: rayquek123/createaccount:1.0
+        restart: always
+        depends_on:
+            - account
+            - wallet
+            - leaderboards
+        environment:
+            PYTHONUNBUFFERED: 1
+            CREATE_WALLET_URL: "http://wallet:5102/"
+            ACCOUNT_URL: "http://account:5100/"
+            AUTH_ACCOUNT_URL: "http://authaccount:5207/"
+            # LEADERBOARD_URL: "http://leaderboard:5103/"
+        ports:
+            - "5208:5208"
+        networks:
+            - my-network
+
+    #####################################################################
+    # Recycling Bin: The frontend for smart bin simulation
+    #####################################################################
+
+    recyclingbin_frontend:
+        build:
+            context: ./client/recycling-bin-vue
+            dockerfile: bin_frontend.Dockerfile
+        image: rayquek123/recyclingbinfrontend:1.0
+        ports:
+            - "8081:8081"
+        networks:
+            - my-network
+        # command: npm run serve
+
+networks:
+    my-network:
+        driver: bridge
