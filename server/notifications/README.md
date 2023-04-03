@@ -9,7 +9,7 @@ nodemailer
 
 #### Publish messages to:
 ```
-connectionUrl = 'amqps://pjfowojn:hi7ZiPRdS6bEQDHZo-_CKeLH7vbINRCn@possum.lmq.cloudamqp.com/pjfowojn'
+connectionUrl = <LavinMQ URL>
 queueName = 'notifications'
 ```
 
