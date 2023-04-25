@@ -25,12 +25,12 @@ Inspired by the Healthy 365 app launched by the Health Promotion Board (HPB), Gr
 
 
 ## Requirements
-The frontend of the application can be run locally or by using the deployed Netlify link. The backend can be run in a docker container, the requirements for the setup is listed below.
+The frontend of the application can be run locally. The backend can be run in a docker container, the requirements for the setup is listed below.
 
 ### Local - Frontend
 Clone greenventure-frontend:
 ```bash
-$ git clone git@github.com:GreenVenture/greenventure-frontend.git
+$ git clone git@github.com:xavierkoo/greenventure-frontend.git
 ```
 Open your terminal in the local project root folder, and execute:
 ```bash
