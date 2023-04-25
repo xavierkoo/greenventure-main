@@ -52,7 +52,7 @@ $ npm run dev
 Application will run by default on port `5173` <br>
 
 ### Backend
-Run load.sql script to initialize the database
+Run load.sql script to initialize the database.<br>
 Configure MongoDB Connection. Refer to this [README](https://github.com/xavierkoo/greenventure-main/tree/main/server/leaderboards#:~:text=3%20weeks%20ago-,README.md,-greenventure%2Dleaderboards).
 
 #### Run Docker
