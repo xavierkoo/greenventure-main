@@ -12,7 +12,7 @@ Inspired by the Healthy 365 app launched by the Health Promotion Board (HPB), Gr
 
 ## Tech Stack
 * Authentication: OAuth2 with Facebook SSO Login
-* Front-End: Vue.js & React.js (https://github.com/GreenVenture/greenventure-frontend)
+* Front-End: Vue.js & React.js (https://github.com/xavierkoo/greenventure-frontend)
 * Back-End: Flask & Node.js + Express.js
 * Databases: MySQL & MongoDB
 * Tools: Docker, LavinMQ & nodemailer
