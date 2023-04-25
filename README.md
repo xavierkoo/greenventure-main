@@ -1,14 +1,21 @@
 <h1 align="center"> GreenVenture </h1> <br>
 
 <p>
-Inspired by the Healthy 365 app launched by the Health Promotion Board (HPB), GreenVenture is an application that rewards users for recyling a non-contaminated recyclable. Like the Healthy 365 app where users are allowed to scan a QRCode to gain points after purchasing a healthier choice product, this approach towards recycling not only incentives users to come ahead to recycle, but also provide instant feedback to users on whether their item is valid recyclable. 
+GreenVenture is an innovative mobile application that incentivizes users to recycle non-contaminated materials by providing rewards for their efforts. Inspired by the successful Healthy 365 app from the Health Promotion Board (HPB), GreenVenture takes a similar approach, allowing users to scan a QR code to earn points for recycling. This not only motivates users to take action towards a more sustainable future but also provides instant feedback on whether their item is a valid recyclable. By making recycling a more rewarding and engaging experience, GreenVenture aims to encourage a wider community to participate in environmental efforts and make a positive impact on the planet.
 </p>
 
 ## Table of Contents
 
+- [Technical Overview Diagram](#technical-overview-diagram)
 - [Tech Stack](#tech-stack)
 - [Features](#features)
+- [API Documentation](#api-documentation)
 - [Requirements](#requirements)
+- [Screenshots](#screenshots)
+
+## Technical Overview Diagram
+Click the image for the expanded view
+<img width="3259" alt="Technical Overview Diagram" src="https://user-images.githubusercontent.com/86020207/234410647-7e1119cf-c13a-4c14-b46d-af2cda1726b7.png">
 
 ## Tech Stack
 * Authentication: OAuth2 with Facebook SSO Login
@@ -23,11 +30,13 @@ Inspired by the Healthy 365 app launched by the Health Promotion Board (HPB), Gr
 * Redeem vouchers with points
 * Participate in the community and view the leaderboards
 
+## API Documentation
+[API Docs](https://drive.google.com/drive/folders/1g18KMNGLlNmEHGi0fD0SDVTmqsj8y6BW?usp=share_link)
 
 ## Requirements
 The frontend of the application can be run locally. The backend can be run in a docker container, the requirements for the setup is listed below.
 
-### Local - Frontend
+### Frontend
 Clone greenventure-frontend:
 ```bash
 $ git clone git@github.com:xavierkoo/greenventure-frontend.git
@@ -44,6 +53,7 @@ Application will run by default on port `5173` <br>
 
 ### Backend
 Run load.sql script to initialize the database
+Configure MongoDB Connection. Refer to this [README](https://github.com/xavierkoo/greenventure-main/tree/main/server/leaderboards#:~:text=3%20weeks%20ago-,README.md,-greenventure%2Dleaderboards).
 
 #### Run Docker
 
@@ -59,3 +69,12 @@ $ docker-compose up
 Secondary UIs: <br>
 * `recycling-bin-frontend` - `8081`
 * `leaderboards` - `3000`
+
+## Screenshots
+<p>
+  <img src="https://user-images.githubusercontent.com/86020207/234412629-d8078b14-54c5-40dd-b807-0fdd8b822442.png" alt="Screenshot" width="26%">
+  <img src="https://user-images.githubusercontent.com/86020207/234413020-e4f9da98-c84a-4e35-bed7-e180b09d876d.png" alt="Screenshot" width="26%">
+  <img src="https://user-images.githubusercontent.com/86020207/234413289-4e79121a-e905-41e0-a686-823b8861153e.png" alt="Screenshot" width="25%">
+  <img src="https://user-images.githubusercontent.com/86020207/234413363-766f20ec-fc51-4cb7-98c7-353eab447e80.png" alt="Screenshot" width="25%">
+  <img src="https://user-images.githubusercontent.com/86020207/234413372-e2bcce41-f747-4896-954b-5be562205e6a.png" alt="Screenshot" width="25%">
+</p>
