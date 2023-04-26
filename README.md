@@ -6,20 +6,13 @@ GreenVenture is an innovative mobile application that incentivizes users to recy
 
 ## Table of Contents
 
-- [Technical Overview Diagram](#technical-overview-diagram)
-- [Database Entity-Relationship Diagram](#database-entity-relationship-diagram)
 - [Tech Stack](#tech-stack)
 - [Features](#features)
+- [Technical Overview Diagram](#technical-overview-diagram)
+- [Database Entity-Relationship Diagram](#database-entity-relationship-diagram)
 - [API Documentation](#api-documentation)
 - [Requirements](#requirements)
 - [Screenshots](#screenshots)
-
-## Technical Overview Diagram
-Click the image for the expanded view
-<img width="3259" alt="Technical Overview Diagram" src="https://user-images.githubusercontent.com/86020207/234410647-7e1119cf-c13a-4c14-b46d-af2cda1726b7.png">
-
-## Database Entity-Relationship Diagram
-![ESD_Project_ER_Diagram drawio](https://user-images.githubusercontent.com/86020207/234415701-63608ae9-94a9-4d96-81ef-23002fba0d34.png)
 
 ## Tech Stack
 * Authentication: OAuth2 with Facebook SSO Login
@@ -33,6 +26,13 @@ Click the image for the expanded view
 * Participate and complete recycling themed missions and earn points
 * Redeem vouchers with points
 * Participate in the community and view the leaderboards
+
+## Technical Overview Diagram
+Click the image for the expanded view
+<img width="3259" alt="Technical Overview Diagram" src="https://user-images.githubusercontent.com/86020207/234410647-7e1119cf-c13a-4c14-b46d-af2cda1726b7.png">
+
+## Database Entity-Relationship Diagram
+![ESD_Project_ER_Diagram drawio](https://user-images.githubusercontent.com/86020207/234415701-63608ae9-94a9-4d96-81ef-23002fba0d34.png)
 
 ## API Documentation
 [API Docs](https://drive.google.com/drive/folders/1g18KMNGLlNmEHGi0fD0SDVTmqsj8y6BW?usp=share_link)
