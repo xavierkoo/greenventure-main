@@ -26,6 +26,7 @@ GreenVenture is an innovative mobile application that incentivizes users to recy
 * Participate and complete recycling themed missions and earn points
 * Redeem vouchers with points
 * Participate in the community and view the leaderboards
+* Microservices-based Architecture for scalability and flexibility.
 
 ## Technical Overview Diagram
 Click the image for the expanded view
