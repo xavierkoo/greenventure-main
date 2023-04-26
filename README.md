@@ -38,26 +38,35 @@ Click the image for the expanded view
 [API Docs](https://drive.google.com/drive/folders/1g18KMNGLlNmEHGi0fD0SDVTmqsj8y6BW?usp=share_link)
 
 ## Requirements
-The frontend of the application can be run locally. The backend can be run in a docker container, the requirements for the setup is listed below.
+The frontend of the application can be run locally. The backend can be run in a Docker container. The setup requirements are listed below:
 
 ### Frontend
-Clone greenventure-frontend:
+Clone [greenventure-frontend](https://github.com/xavierkoo/greenventure-frontend):
 ```bash
 $ git clone git@github.com:xavierkoo/greenventure-frontend.git
 ```
+
 Open your terminal in the local project root folder, and execute:
 ```bash
 $ npm install
 ```
+
 Run the application
 ```bash
 $ npm run dev
 ```
+
 Application will run by default on port `5173` <br>
 
 ### Backend
-Run load.sql script to initialize the database.<br>
-Configure MongoDB Connection. Refer to this [README](https://github.com/xavierkoo/greenventure-main/tree/main/server/leaderboards#:~:text=3%20weeks%20ago-,README.md,-greenventure%2Dleaderboards).
+Clone greenventure-main:
+```bash
+$ git clone git@github.com:xavierkoo/greenventure-main.git
+```
+
+#### Setup Databases
+* Run load.sql script to initialize the databases.<br>
+* Configure MongoDB connection for Leaderboard Service. Refer to this [README](https://github.com/xavierkoo/greenventure-main/tree/main/server/leaderboards#:~:text=3%20weeks%20ago-,README.md,-greenventure%2Dleaderboards).
 
 #### Run Docker
 
