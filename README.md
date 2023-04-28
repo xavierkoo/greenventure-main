@@ -4,6 +4,10 @@
 GreenVenture is an innovative mobile application that incentivizes users to recycle non-contaminated materials by providing rewards for their efforts. Inspired by the successful Healthy 365 app from the Health Promotion Board (HPB), GreenVenture takes a similar approach, allowing users to scan a QR code to earn points for recycling. This not only motivates users to take action towards a more sustainable future but also provides instant feedback on whether their item is a valid recyclable. By making recycling a more rewarding and engaging experience, GreenVenture aims to encourage a wider community to participate in environmental efforts and make a positive impact on the planet.
 </p>
 
+GreenVenture consists of two parts:
+1. GreenVenture Backend (Microservices-Based Architecture)
+2. [GreenVenture Frontend](https://github.com/xavierkoo/greenventure-frontend)
+
 ## Table of Contents
 
 - [Tech Stack](#tech-stack)
@@ -16,7 +20,7 @@ GreenVenture is an innovative mobile application that incentivizes users to recy
 
 ## Tech Stack
 * Authentication: OAuth2 with Facebook SSO Login
-* Front-End: Vue.js & React.js (The frontend repository can be found [here](https://github.com/xavierkoo/greenventure-frontend).)
+* Front-End: Vue.js & React.js
 * Back-End: Flask & Node.js + Express.js
 * Databases: MySQL & MongoDB
 * Tools: Docker, LavinMQ & nodemailer
