@@ -37,6 +37,7 @@ Click the image for the expanded view
 <img width="3244" alt="Technical Overview Diagram" src="https://user-images.githubusercontent.com/86020207/234479488-6ad16578-963a-43f6-a59f-b1f8f5f14a58.png">
 
 ## Database Entity-Relationship Diagram
+Click the image for the expanded view
 ![ESD_Project_ER_Diagram drawio](https://user-images.githubusercontent.com/86020207/234415701-63608ae9-94a9-4d96-81ef-23002fba0d34.png)
 
 ## API Documentation
